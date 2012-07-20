@@ -6,6 +6,7 @@ var W = 500,
 	x = 100,
 	y = 100;
 
+var frames = 2100;
 var particles = [],
 	pOpts = {
 		containerW: W,
@@ -16,10 +17,11 @@ var p1 = new Particle({
 	containerW: W,
 	containerH: H,
 	x: 450,
-	y: 100,
+	y: 350,
 	xVelocity: -10,
-	yVelocity: 20,
-	color: 'blue'
+	yVelocity: -5,
+	color: 'blue',
+	radius: 30
 });
 
 var p2 = new Particle({
@@ -29,16 +31,19 @@ var p2 = new Particle({
 	y: 400,
 	xVelocity: -10,
 	yVelocity: -20,
-	color: 'red'
+	color: 'red',
+	radius: 30
 });
 
 particles.push(p1);
 particles.push(p2);
 
 /* Add a few particles to start */
+/*
 for(var i = 0; i < 2; i++) {
 	particles.push(new Particle(pOpts));
 }
+*/
 
 
 var draw = function() {
@@ -50,22 +55,27 @@ var draw = function() {
 	for (var i = 0; i< particles.length; i++) {
 		var p = particles[i];
 		p.draw(ctx);
-		p.move();
+	}
+	frames--;
+	if(frames === 0) {
+		clearInterval(drawer);
 	}
 }
 
 var update = function() {
+	console.log(particles);
 	for (var i = 0; i< particles.length; i++) {
 		var p = particles[i];
-		for (var j = i + 1; j< particles.length; j++) {
+		p.move();
+		for (var j = i + 1; j < particles.length; j++) {
 			var otherP = particles[j];
 			p.checkForCollision(otherP);
 		}
 	}
-	setTimeout(update, 10);
+	setTimeout(update, 33);
 }
 
-setInterval(draw, 33);
+var drawer = setInterval(draw, 33);
 update();
 
 canvas.addEventListener("mousedown", function(e) {
